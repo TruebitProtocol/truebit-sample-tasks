@@ -1,45 +1,54 @@
 #include <stdio.h>
 #include <dlfcn.h>
 
-int main() {
-    /* My First TrueBit Task Program in C */
-    void *handle;
-    int (*func_map)();
-    int (*func_reduce)(int);
+typedef int (*f_ptr)(int);
+typedef f_ptr (*pm)();
 
-    /* Map Functionality */
-    handle = dlopen("./libmap.so", RTLD_LAZY);
+f_ptr process_to_function(char* file_name) {
+
+    void *handle;
+    int (*func_mapreduce)(int);
+
+    handle = dlopen(file_name, RTLD_LAZY);
     if (!handle) {
         /* fail to load the library */
         fprintf(stderr, "Error: %s\n", dlerror());
-        return 1;
+        return NULL;
     }
 
-    *(void**)(&func_map) = dlsym(handle, "main");
-    if (!func_map) {
+    *(void**)(&func_mapreduce) = dlsym(handle, "main");
+    if (!func_mapreduce) {
         /* no such symbol */
         fprintf(stderr, "Error: %s\n", dlerror());
         dlclose(handle);
+        return NULL;
+    }
+
+    return func_mapreduce;
+}
+
+int main() {
+
+    /* My First TrueBit Task Program in C */
+    void *handle;
+    int (*func_map)(int);
+    int (*func_reduce)(int);
+
+    // TODO: Read Data for array of Binary32: <20B - Eth Address: 12B value>
+
+    /* Map Functionality */
+    func_map = process_to_function("./map/lib_nth_prime.so");
+    if (!func_map) {
         return 1;
     }
 
-    int mapValue = func_map();
+    int mapValue = func_map(12); // TODO: Add the array of Binary32
     fprintf(stdout, "Map: %d\n", mapValue);
     dlclose(handle);
 
     /* Reduce Functionality */
-    handle = dlopen("./libreduce.so", RTLD_LAZY);
-    if (!handle) {
-        /* fail to load the library */
-        fprintf(stderr, "Error: %s\n", dlerror());
-        return 1;
-    }
-
-    *(void**)(&func_reduce) = dlsym(handle, "main");
+    func_reduce = process_to_function("./reduce/lib_find_threes.so");
     if (!func_reduce) {
-        /* no such symbol */
-        fprintf(stderr, "Error: %s\n", dlerror());
-        dlclose(handle);
         return 1;
     }
 

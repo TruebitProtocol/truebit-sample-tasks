@@ -1,3 +1,3 @@
 #pragma once
 
-int reduce();
+int map(int);
