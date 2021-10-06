@@ -1,13 +1,18 @@
 #include <stdio.h>
 #include <dlfcn.h>
 
-typedef int (*f_ptr)(int);
+typedef int (*f_ptr)(char[32]);
 typedef f_ptr (*pm)();
+
+struct MapReduceTuple {
+    int size;
+    char[][32] data
+};
 
 f_ptr process_to_function(char* file_name) {
 
     void *handle;
-    int (*func_mapreduce)(int);
+    MapReduceTuple (*func_mapreduce)(char[][32], int);
 
     handle = dlopen(file_name, RTLD_LAZY);
     if (!handle) {
@@ -31,10 +36,11 @@ int main() {
 
     /* My First TrueBit Task Program in C */
     void *handle;
-    int (*func_map)(int);
-    int (*func_reduce)(int);
+    MapReduceTuple (*func_map)(char[][32], int);
+    MapReduceTuple (*func_reduce)(char[][32], int);
 
     // TODO: Read Data for array of Binary32: <20B - Eth Address: 12B value>
+    char data[][32] = ["27dc7AFF9355902358cD000000000001"];
 
     /* Map Functionality */
     func_map = process_to_function("./map/lib_nth_prime.so");
@@ -42,7 +48,7 @@ int main() {
         return 1;
     }
 
-    int mapValue = func_map(12); // TODO: Add the array of Binary32
+    MapReduceTuple mapValue = func_map(data, 1); // TODO: Add the array of Binary32
     fprintf(stdout, "Map: %d\n", mapValue);
     dlclose(handle);
 
@@ -52,7 +58,7 @@ int main() {
         return 1;
     }
 
-    int reduceValue = func_reduce(mapValue);
+    MapReduceTuple reduceValue = func_reduce(mapValue.data, mapValue.size);
     fprintf(stdout, "Reduce: %d\n", reduceValue);
     dlclose(handle);
 
