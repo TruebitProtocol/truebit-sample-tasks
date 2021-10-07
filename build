@@ -1,0 +1,12 @@
+#!/bin/bash
+# Proper header for a Bash script.
+
+rm ./map/*.so
+rm ./reduce/*.so
+rm ./run
+
+# gcc -o ./map/lib_nth_prime.so ./map/nth_prime.c
+# gcc -o ./reduce/lib_find_threes.so ./reduce/find_threes.c
+gcc -c -o ./map/lib_nth_prime.so ./map/nth_prime.c
+gcc -c -o ./reduce/lib_find_threes.so ./reduce/find_threes.c
+gcc -o run ./main.c

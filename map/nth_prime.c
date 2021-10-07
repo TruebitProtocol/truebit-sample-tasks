@@ -1,17 +1,20 @@
-#include "map.h"
+#include "../map_reduce.h"
 
-struct MapReduceTuple mr_func(char data[][32], int size) {
-   // int i;
-   // char[32] *dPtr;
-   // char[32][] mappedData = [];
-   // for(i = 0; i < size; i++){
-   //    dPtr = &data[i];
-   //    *dPtr[31] = 3;
-   //    // mappedData[i] = &dPtr;
-   // }
+struct MapReduceTuple mr_func(int size, char **data) {
+   int i;
+   char *dPtr;
+   char **mapAryPtr = malloc(sizeof(char *) * size);
+   for(i = 0; i < size; i++){
+      dPtr = data[i];
+      // TODO: Map Process Here!
+      mapAryPtr[i] = dPtr;
+   }
 
-   char char_array[32] = {'2','7','d','c','7','A','F','F','9','3','5','5','9','0','2','3','5','8','c','D','0','0','0','0','0','0','0','0','0','0','0','3'};
+   // REMOVE: For Testing
+   mapAryPtr[0][31] = '3';
+   mapAryPtr[1][31] = '5';
+   /// END REMOVE
 
-   struct MapReduceTuple ret; //= { .size = 1, .data = {char_array} };
+   struct MapReduceTuple ret = { .size = 2, .data = mapAryPtr };
    return ret;
 }

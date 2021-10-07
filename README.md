@@ -6,4 +6,9 @@ The practical case to keep in mind here is periodic ecosystem rewards, but I thi
 
 ## How to use
 
+Build the libraries from the root:
+`gcc -c -o ./map/lib_nth_prime.so ./map/nth_prime.c`
+`gcc -c -o ./reduce/lib_find_threes.so ./reduce/find_threes.c`
+`gcc -o test ./main.c`
+
 <TBD>

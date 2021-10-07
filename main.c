@@ -1,18 +1,14 @@
 #include <stdio.h>
 #include <dlfcn.h>
+#include "map_reduce.h"
 
-typedef int (*f_ptr)(char[32]);
+typedef MapReduceTuple (*f_ptr)(int, char**);
 typedef f_ptr (*pm)();
-
-struct MapReduceTuple {
-    int size;
-    char[][32] data
-};
 
 f_ptr process_to_function(char* file_name) {
 
     void *handle;
-    MapReduceTuple (*func_mapreduce)(char[][32], int);
+    MapReduceTuple (*func_mapreduce)(int, char**);
 
     handle = dlopen(file_name, RTLD_LAZY);
     if (!handle) {
@@ -21,7 +17,7 @@ f_ptr process_to_function(char* file_name) {
         return NULL;
     }
 
-    *(void**)(&func_mapreduce) = dlsym(handle, "main");
+    *(void**)(&func_mapreduce) = dlsym(handle, "mr_func");
     if (!func_mapreduce) {
         /* no such symbol */
         fprintf(stderr, "Error: %s\n", dlerror());
@@ -32,15 +28,25 @@ f_ptr process_to_function(char* file_name) {
     return func_mapreduce;
 }
 
+void print_output(MapReduceTuple *val) {
+    for (int i = 0; i < val->size; ++i) {
+        printf( "\t%.32s\n", val->data[i]);
+    }
+}
+
 int main() {
 
     /* My First TrueBit Task Program in C */
     void *handle;
-    MapReduceTuple (*func_map)(char[][32], int);
-    MapReduceTuple (*func_reduce)(char[][32], int);
+    MapReduceTuple (*func_map)(int, char**);
+    MapReduceTuple (*func_reduce)(int, char**);
 
     // TODO: Read Data for array of Binary32: <20B - Eth Address: 12B value>
-    char data[][32] = ["27dc7AFF9355902358cD000000000001"];
+    char char_array1[32] = {'2','7','d','c','7','A','F','F','9','3','5','5','9','0','2','3','5','8','c','D','0','0','0','0','0','0','0','0','0','0','0','1'};
+    char char_array2[32] = {'1','7','d','c','7','A','F','F','9','3','5','5','9','0','2','3','5','8','c','B','0','0','0','0','0','0','0','0','0','0','0','1'};
+    char **dataAryPtr = malloc(sizeof(char *) * 2);
+    dataAryPtr[0] = char_array1;
+    dataAryPtr[1] = char_array2;
 
     /* Map Functionality */
     func_map = process_to_function("./map/lib_nth_prime.so");
@@ -48,8 +54,9 @@ int main() {
         return 1;
     }
 
-    MapReduceTuple mapValue = func_map(data, 1); // TODO: Add the array of Binary32
-    fprintf(stdout, "Map: %d\n", mapValue);
+    MapReduceTuple mapValue = func_map(1, dataAryPtr);
+    printf("Map:\n");
+    print_output(&mapValue);
     dlclose(handle);
 
     /* Reduce Functionality */
@@ -58,8 +65,9 @@ int main() {
         return 1;
     }
 
-    MapReduceTuple reduceValue = func_reduce(mapValue.data, mapValue.size);
-    fprintf(stdout, "Reduce: %d\n", reduceValue);
+    MapReduceTuple reduceValue = func_reduce(mapValue.size, mapValue.data);
+    printf("Reduce:\n");
+    print_output(&reduceValue);
     dlclose(handle);
 
     return 0;
