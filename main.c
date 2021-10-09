@@ -28,9 +28,10 @@ f_ptr process_to_function(char* file_name) {
     return func_mapreduce;
 }
 
-void print_output(MapReduceTuple *val) {
+void print_output(MapReduceTuple val) {
+    printf("Array Size: %d\n", val->size);
     for (int i = 0; i < val->size; ++i) {
-        printf( "\t%.32s\n", val->data[i]);
+        printf( "\tloc: %p - %.32s\n", (void*)val->data[i], val->data[i]);
     }
 }
 
@@ -47,27 +48,33 @@ int main() {
     char **dataAryPtr = malloc(sizeof(char *) * 2);
     dataAryPtr[0] = char_array1;
     dataAryPtr[1] = char_array2;
+    MapReduceTuple start = malloc(sizeof(MapReduceStruct));
+    start->size = 2;
+    start->data = dataAryPtr;
+    printf("Data:\n");
+    print_output(start);
+
 
     /* Map Functionality */
-    func_map = process_to_function("./map/lib_nth_prime.so");
+    func_map = process_to_function("lib_nth_prime.so");
     if (!func_map) {
         return 1;
     }
 
-    MapReduceTuple mapValue = func_map(1, dataAryPtr);
+    MapReduceTuple mapValue = func_map(2, dataAryPtr);
     printf("Map:\n");
-    print_output(&mapValue);
+    print_output(mapValue);
     dlclose(handle);
 
     /* Reduce Functionality */
-    func_reduce = process_to_function("./reduce/lib_find_threes.so");
+    func_reduce = process_to_function("lib_find_threes.so");
     if (!func_reduce) {
         return 1;
     }
 
-    MapReduceTuple reduceValue = func_reduce(mapValue.size, mapValue.data);
+    MapReduceTuple reduceValue = func_reduce(mapValue->size, mapValue->data);
     printf("Reduce:\n");
-    print_output(&reduceValue);
+    print_output(reduceValue);
     dlclose(handle);
 
     return 0;

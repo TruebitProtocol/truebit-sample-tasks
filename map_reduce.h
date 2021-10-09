@@ -3,10 +3,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct MapReduceTuple {
+typedef struct {
     int size;
     char **data;
-} MapReduceTuple;
+} MapReduceStruct;
+
+typedef MapReduceStruct *MapReduceTuple;
 
 // inline MapReduceTuple* alloc_data(int size, char (*data)[][32]) {
 //     MapReduceTuple * ret = malloc(sizeof(MapReduceTuple) + (sizeof(char[32]) * size));
@@ -16,4 +18,4 @@ typedef struct MapReduceTuple {
 //     return ret;
 // }
 
-struct MapReduceTuple mr_func(int size, char **data);
+MapReduceTuple mr_func(int size, char **data);
