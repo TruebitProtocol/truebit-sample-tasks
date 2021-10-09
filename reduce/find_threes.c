@@ -1,7 +1,4 @@
 #include "../map_reduce.h"
-#include <stdio.h>
-
-int DATA_ARRAY_SIZE = 12;
 
 MapReduceTuple mr_func(int size, char **data) {
    int i, j, idx, insertIdx, newSize;
@@ -11,15 +8,15 @@ MapReduceTuple mr_func(int size, char **data) {
    char *dPtr;
    for(i = 0; i < size; i++){
       dPtr = data[i];
-      for(j = 0; j < DATA_ARRAY_SIZE; j++){
+      for(j = 0; j < DATA_ARRAY_LEN; j++){
          idx = 31 - j;
          if (dPtr[idx] != '3') {
             continue;
          }
          newSize++;
          reduceAryPtr = realloc(reduceAryPtr, sizeof(char *) * newSize);
-         reduceAryPtr[insertIdx] = (char *)malloc(33 * sizeof(char));
-         strncpy(reduceAryPtr[insertIdx], data[i], 32);
+         reduceAryPtr[insertIdx] = (char *)malloc((TOTAL_DATA_LEN+1) * sizeof(char));
+         strncpy(reduceAryPtr[insertIdx], data[i], TOTAL_DATA_LEN);
          insertIdx = newSize;
          break;
       }
