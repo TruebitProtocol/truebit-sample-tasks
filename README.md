@@ -8,7 +8,8 @@ This is a Example Library of Several TrueBit Tasks that are written in different
 
 ### Install Emscripten
 
-Using [HomeBrew](https://formulae.brew.sh/formula/emscripten)
+* On A Mac:
+    * Instructions Using [HomeBrew](https://formulae.brew.sh/formula/emscripten)
 
 ## List of Example Tasks
 
