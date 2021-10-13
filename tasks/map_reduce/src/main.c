@@ -1,26 +1,6 @@
 #include "map_reduce.h"
 
 // HELPER FUNCTIONS
-long long find_nth_prime(long long *rangeNum) {
-   long long rangenumber, c = 0, num = 2, i, nth_prime = 0;
-   while (c != *rangeNum)  {
-    int count = 0;
-    for (i = 2; i <= sqrt (num); i++) {
-      if (num % i == 0) {
-        count++;
-        break;
-      }
-    }
-    if (count == 0) {
-      c++;
-      nth_prime = num;
-    }
-    num = num + 1;
-  }
-
-  return nth_prime;
-}
-
 MapReduceTuple read_input_file() {
     int insertIdx = 0, lineSize = 0;
     char ch;
@@ -53,13 +33,60 @@ MapReduceTuple read_input_file() {
 }
 
 void print_output(MapReduceTuple val) {
-    printf("Array Size: %d\n", val->size);
-    for (int i = 0; i < val->size; ++i) {
-        printf( "\tloc: %p - %.32s\n", (void*)val->data[i], val->data[i]);
+    // printf("Array Size: %d\n", val->size);
+    // for (int i = 0; i < val->size; ++i) {
+    //     printf( "\tloc: %p - %.32s\n", (void*)val->data[i], val->data[i]);
+    // }
+
+    FILE *fp;
+    fp = fopen("output.data", "w");
+    int i, j;
+    char *dPtr;
+    int size = val->size;
+
+    if (fp != NULL) {
+        for(i = 0; i < size; i++){
+            dPtr = val->data[i];
+            for(j = 0; j < TOTAL_DATA_LEN; j++) {
+                fputc (dPtr[j], fp);
+            }
+            fputc ('\n', fp);
+        }
+        fclose(fp);
     }
 }
 
-// NOTE: Map Function...can be customized to achieve different goal
+/**
+ * find_nth_prime: takes in a value in and finds the corresponding n^th prime
+ * i.e. 1 => 2 (1st prime); 9 => 19 (9th prime)
+ * @param rangeNum - [long long *] The value for the n^th prime number to find
+ */
+long long find_nth_prime(long long *rangeNum) {
+   long long rangenumber, c = 0, num = 2, i, nth_prime = 0;
+   while (c != *rangeNum)  {
+    int count = 0;
+    for (i = 2; i <= sqrt (num); i++) {
+      if (num % i == 0) {
+        count++;
+        break;
+      }
+    }
+    if (count == 0) {
+      c++;
+      nth_prime = num;
+    }
+    num = num + 1;
+  }
+
+  return nth_prime;
+}
+
+/**
+ * map - This is the Map Function that transform the input data
+ * * NOTE: Map Function...can be customized to achieve different goal
+ * @param mapData - [MapReduceTuple] Tuple that contains the 'size' and 'data' (char **) of the data to map
+ * @return - [MapReduceTuple] Tuple that contains the 'size' and 'data' (char **) of the data thats been mapped at new memory space
+ */
 MapReduceTuple map(MapReduceTuple mapData) {
     int i;
     long long dataVal, nth_prime;
@@ -100,7 +127,7 @@ MapReduceTuple reduce(MapReduceTuple reduceData) {
         for(j = 0; j < DATA_ARRAY_LEN; j++){
             idx = 31 - j;
             if (dPtr[idx] != '3') {
-            continue;
+                continue;
             }
             newSize++;
             reduceAryPtr = realloc(reduceAryPtr, sizeof(char *) * newSize);
@@ -124,7 +151,7 @@ MapReduceTuple reduce(MapReduceTuple reduceData) {
 **/
 int main() {
 
-    /* Read the input file called 'input.data' */
+    /* Read the input file called 'input.data' of line-seperated Binary32 strings */
     MapReduceTuple inputData = read_input_file();
 
     /* Map Call: Find the Nth Prime Number in the Value Range of the Binary32: data[20] - data[31] */
@@ -133,7 +160,7 @@ int main() {
     /* Reduce Call: Find if there is a '3' in the Value Range of the Binary32: mapped_data[20] - mapped_data[31] */
     MapReduceTuple reducedData = reduce(mappedData);
 
-    /* Output Result of Map-Reduce to output file */
+    /* Output Result of Map-Reduce to output file called 'output.data' */
     print_output(reducedData);
 
     /* Memory cleanup */
