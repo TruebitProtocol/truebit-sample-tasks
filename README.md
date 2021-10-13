@@ -12,7 +12,7 @@ Using [HomeBrew](https://formulae.brew.sh/formula/emscripten)
 
 ## How to use
 
-Build the library from the root:
-`bash ./build`
+* Build the library from the root:
+    * RUN: `bash ./build`
 
 <TBD>
