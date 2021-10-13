@@ -9,4 +9,6 @@ The practical case to keep in mind here is periodic ecosystem rewards, but I thi
 * Build the library from the root:
     * RUN: `bash ./build`
 
-<TBD>
+## Extra Notes
+
+* File: `input.data` is just an example of the format of the input data that would ultimately be attached to the task in the Solidity Contract

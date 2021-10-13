@@ -2,6 +2,8 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+#include <math.h>
 
 // Constants
 int TOTAL_DATA_LEN = 32;
@@ -15,5 +17,3 @@ typedef struct {
 } MapReduceStruct;
 
 typedef MapReduceStruct *MapReduceTuple;
-
-MapReduceTuple mr_func(int size, char **data);

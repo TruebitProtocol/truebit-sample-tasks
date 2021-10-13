@@ -13,6 +13,6 @@ This is a Example Library of Several TrueBit Tasks that are written in different
 
 ## List of Example Tasks
 
-* MapReduce Example
-    * Language: C
-    * Description: Task that takes a list of Binary32 data that are made up of ETH Address (First 20B) and a Value (Last 12B) maps the Value to the n^th prime number, then reduces the list by only looking for Value that contains the number '3'
+* _MapReduce_ Example
+    * _Language:_ C
+    * _Description:_ Task that takes a list of Binary32 data that are made up of ETH Address (First 20B) and a Value (Last 12B) maps the Value to the n^th prime number, then reduces the list by only looking for Value that contains the number '3'

@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <math.h>
 #include "map_reduce.h"
 
 // HELPER FUNCTIONS
@@ -21,6 +19,37 @@ long long find_nth_prime(long long *rangeNum) {
   }
 
   return nth_prime;
+}
+
+MapReduceTuple read_input_file() {
+    int insertIdx = 0, lineSize = 0;
+    char ch;
+    FILE *fp;
+    char buffer[TOTAL_DATA_LEN+1];
+    char **dataAryPtr = (char **) calloc(0, sizeof(char *));
+
+    fp = fopen("input.data", "r"); // read mode
+
+    if (fp == NULL) {
+        perror("Error while opening the file.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    while(fgets(buffer, TOTAL_DATA_LEN+1, fp)) {
+        lineSize++;
+        dataAryPtr = (char **) realloc(dataAryPtr, sizeof(char *) * lineSize);
+        dataAryPtr[insertIdx] = (char *)malloc((TOTAL_DATA_LEN+1) * sizeof(char));
+        strncpy(dataAryPtr[insertIdx], buffer, TOTAL_DATA_LEN);
+        insertIdx = lineSize;
+    }
+
+    MapReduceTuple data = malloc(sizeof(MapReduceStruct));
+    data->size = lineSize;
+    data->data = dataAryPtr;
+
+    fclose(fp);
+
+    return data;
 }
 
 void print_output(MapReduceTuple val) {
@@ -89,29 +118,31 @@ MapReduceTuple reduce(MapReduceTuple reduceData) {
     return ret;
 }
 
-
+/**
+ * Main Program:
+ * * This will reading in the input data and output the map-reduced data
+**/
 int main() {
 
-    /* My First TrueBit Task Program in C */
-
-    // TODO: Read Data for array of Binary32: <20B - Eth Address: 12B value>
-    char char_array1[32] = {'2','7','d','c','7','A','F','F','9','3','5','5','9','0','2','3','5','8','c','D','0','0','0','0','0','0','0','0','0','0','2','1'};
-    char char_array2[32] = {'1','7','d','c','7','A','F','F','9','3','5','5','9','0','2','3','5','8','c','B','0','0','0','0','0','0','0','0','0','4','0','1'};
-    char **dataAryPtr = malloc(sizeof(char *) * 2);
-    dataAryPtr[0] = char_array1;
-    dataAryPtr[1] = char_array2;
-    MapReduceTuple start = malloc(sizeof(MapReduceStruct));
-    start->size = 2;
-    start->data = dataAryPtr;
+    /* Read the input file called 'input.data' */
+    MapReduceTuple inputData = read_input_file();
 
     /* Map Call: Find the Nth Prime Number in the Value Range of the Binary32: data[20] - data[31] */
-    MapReduceTuple mapValue = map(start);
+    MapReduceTuple mappedData = map(inputData);
 
     /* Reduce Call: Find if there is a '3' in the Value Range of the Binary32: mapped_data[20] - mapped_data[31] */
-    MapReduceTuple reduceValue = reduce(mapValue);
+    MapReduceTuple reducedData = reduce(mappedData);
 
     /* Output Result of Map-Reduce to output file */
-    print_output(reduceValue);
+    print_output(reducedData);
 
-    return 0;
+    /* Memory cleanup */
+    free(inputData->data);
+    free(inputData);
+    free(mappedData->data);
+    free(mappedData);
+    free(reducedData->data);
+    free(reducedData);
+
+    exit(EXIT_SUCCESS);
 }
