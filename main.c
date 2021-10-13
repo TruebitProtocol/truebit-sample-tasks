@@ -1,31 +1,26 @@
 #include <stdio.h>
-#include <dlfcn.h>
+#include <math.h>
 #include "map_reduce.h"
 
-typedef MapReduceTuple (*f_ptr)(int, char**);
-typedef f_ptr (*pm)();
-
-f_ptr process_to_function(char* file_name) {
-
-    void *handle;
-    MapReduceTuple (*func_mapreduce)(int, char**);
-
-    handle = dlopen(file_name, RTLD_LAZY);
-    if (!handle) {
-        /* fail to load the library */
-        fprintf(stderr, "Error: %s\n", dlerror());
-        return NULL;
+// HELPER FUNCTIONS
+long long find_nth_prime(long long *rangeNum) {
+   long long rangenumber, c = 0, num = 2, i, nth_prime = 0;
+   while (c != *rangeNum)  {
+    int count = 0;
+    for (i = 2; i <= sqrt (num); i++) {
+      if (num % i == 0) {
+        count++;
+        break;
+      }
     }
-
-    *(void**)(&func_mapreduce) = dlsym(handle, "mr_func");
-    if (!func_mapreduce) {
-        /* no such symbol */
-        fprintf(stderr, "Error: %s\n", dlerror());
-        dlclose(handle);
-        return NULL;
+    if (count == 0) {
+      c++;
+      nth_prime = num;
     }
+    num = num + 1;
+  }
 
-    return func_mapreduce;
+  return nth_prime;
 }
 
 void print_output(MapReduceTuple val) {
@@ -35,12 +30,69 @@ void print_output(MapReduceTuple val) {
     }
 }
 
+// NOTE: Map Function...can be customized to achieve different goal
+MapReduceTuple map(MapReduceTuple mapData) {
+    int i;
+    long long dataVal, nth_prime;
+    int size = mapData->size;
+    char **mapAryPtr = malloc( size * sizeof(char*) );
+    char dataValueBuff[DATA_ARRAY_LEN];
+
+    // BEGIN: Customizable Map Code Below...
+    for(i = 0; i < size; i++){
+        // Map the data value to the Nth Prime represented by the data array
+        memcpy(dataValueBuff, &(mapData->data)[i][ETH_ADDRESS_LEN + EXTRA_DATA_LEN], DATA_ARRAY_LEN);
+        dataVal = atoll(&dataValueBuff[0]);
+        nth_prime = find_nth_prime(&dataVal);
+        mapAryPtr[i] = (char *)malloc((TOTAL_DATA_LEN+1) * sizeof(char));
+        strncpy(mapAryPtr[i], mapData->data[i], TOTAL_DATA_LEN);
+        sprintf(&mapAryPtr[i][ETH_ADDRESS_LEN + EXTRA_DATA_LEN], "%1.8lld", nth_prime);
+    }
+    // END: Customizable Map Code Above...
+
+    MapReduceTuple ret = malloc(sizeof(MapReduceStruct));
+    ret->size = size;
+    ret->data = mapAryPtr;
+    return ret;
+}
+
+// NOTE: Reduce Function...can be customized to achieve different goal
+MapReduceTuple reduce(MapReduceTuple reduceData) {
+    int i, j, idx, insertIdx, newSize, size;
+    size = reduceData->size;
+    insertIdx = 0;
+    newSize = 0;
+    char **reduceAryPtr = calloc(0, sizeof(char *));
+    char *dPtr;
+
+    // BEGIN: Customizable Reduce Code Below...
+    for(i = 0; i < size; i++){
+        dPtr = reduceData->data[i];
+        for(j = 0; j < DATA_ARRAY_LEN; j++){
+            idx = 31 - j;
+            if (dPtr[idx] != '3') {
+            continue;
+            }
+            newSize++;
+            reduceAryPtr = realloc(reduceAryPtr, sizeof(char *) * newSize);
+            reduceAryPtr[insertIdx] = (char *)malloc((TOTAL_DATA_LEN+1) * sizeof(char));
+            strncpy(reduceAryPtr[insertIdx], reduceData->data[i], TOTAL_DATA_LEN);
+            insertIdx = newSize;
+            break;
+        }
+    }
+    // END: Customizable Reduce Code Above...
+
+    MapReduceTuple ret = malloc(sizeof(MapReduceStruct));
+    ret->size = newSize;
+    ret->data = reduceAryPtr;
+    return ret;
+}
+
+
 int main() {
 
     /* My First TrueBit Task Program in C */
-    void *handle;
-    MapReduceTuple (*func_map)(int, char**);
-    MapReduceTuple (*func_reduce)(int, char**);
 
     // TODO: Read Data for array of Binary32: <20B - Eth Address: 12B value>
     char char_array1[32] = {'2','7','d','c','7','A','F','F','9','3','5','5','9','0','2','3','5','8','c','D','0','0','0','0','0','0','0','0','0','0','2','1'};
@@ -51,31 +103,15 @@ int main() {
     MapReduceTuple start = malloc(sizeof(MapReduceStruct));
     start->size = 2;
     start->data = dataAryPtr;
-    printf("Data:\n");
-    print_output(start);
 
+    /* Map Call: Find the Nth Prime Number in the Value Range of the Binary32: data[20] - data[31] */
+    MapReduceTuple mapValue = map(start);
 
-    /* Map Functionality */
-    func_map = process_to_function("lib_nth_prime.so");
-    if (!func_map) {
-        return 1;
-    }
+    /* Reduce Call: Find if there is a '3' in the Value Range of the Binary32: mapped_data[20] - mapped_data[31] */
+    MapReduceTuple reduceValue = reduce(mapValue);
 
-    MapReduceTuple mapValue = func_map(2, dataAryPtr);
-    printf("Map:\n");
-    print_output(mapValue);
-    dlclose(handle);
-
-    /* Reduce Functionality */
-    func_reduce = process_to_function("lib_find_threes.so");
-    if (!func_reduce) {
-        return 1;
-    }
-
-    MapReduceTuple reduceValue = func_reduce(mapValue->size, mapValue->data);
-    printf("Reduce:\n");
+    /* Output Result of Map-Reduce to output file */
     print_output(reduceValue);
-    dlclose(handle);
 
     return 0;
 }
