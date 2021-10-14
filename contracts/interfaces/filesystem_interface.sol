@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.15 <0.9.0;
+pragma solidity >=0.5.0 <0.9.0;
 
 interface Filesystem {
    function createFileFromArray(string calldata name, uint nonce, bytes32[] calldata arr, uint sz) external returns (bytes32);

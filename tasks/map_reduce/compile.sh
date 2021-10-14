@@ -1,11 +1,12 @@
-#!/bin/bash
-# Proper header for a Bash script.
+#!/bin/sh
 
-rm *.so
-rm *.o
-rm ./run
+rm -rf ./build
+mkdir ./build
 
-# gcc -c -fPIC ./map/nth_prime.c ./reduce/find_threes.c
-# gcc -shared -o lib_nth_prime.so nth_prime.o
-# gcc -shared -o lib_find_threes.so find_threes.o
-gcc -o run ./main.c
+em++ -O2 -I $EMSCRIPTEN/system/include -c -std=c++11 main.c
+em++ -o map_reduce.js main.o -lcrypto -lssl
+
+node ~/emscripten-module-wrapper/prepare.js map_reduce.js --file input.data --file output.data --run --debug --out=dist --memory-size=20 --metering=5000 --upload-ipfs --limit-stack
+cp dist/stacklimit.wasm task.wasm
+cp dist/info.json .
+solc --overwrite --bin --abi --optimize ./src/contract.sol -o build

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.15 <0.9.0;
+pragma solidity >=0.5.0 <0.9.0;
 
 import "./interfaces/filesystem_interface.sol";
 import "./interfaces/truebit_interface.sol";

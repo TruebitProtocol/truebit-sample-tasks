@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.15 <0.9.0;
+pragma solidity >=0.5.0 <0.9.0;
 
 interface TrueBit {
    function createTaskId(bytes32 bundleId, uint minDeposit, uint solverReward, uint verifierTax, uint ownerFee, uint limit) external returns (bytes32);
