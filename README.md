@@ -11,6 +11,13 @@ This is a Example Library of Several TrueBit Tasks that are written in different
 * On A Mac:
     * Instructions Using [HomeBrew](https://formulae.brew.sh/formula/emscripten)
 
+### Build Emscripten Module Wrapper
+
+* On A Mac:
+    * From `root` directory:
+        * RUN `cd ./emscripten-module-wrapper`
+        * RUN `npm install`
+
 ## List of Example Tasks
 
 * _MapReduce_ Example
