@@ -63,8 +63,7 @@ contract TruebitTaskPipeContract {
 
     // call this after makeTaskID
     function emitTask (bytes32 taskID) external payable {
-        (bool success,) = address(truebit).call{value:truebit.PLATFORM_FEE_TASK_GIVER()}(abi.encodeWithSignature("submitTask(bytes32)", taskID));
-        require(success, "Emit Task Failed!");
+        truebit.submitTask.value(truebit.PLATFORM_FEE_TASK_GIVER())(taskID);
     }
 
     // this is the callback name
