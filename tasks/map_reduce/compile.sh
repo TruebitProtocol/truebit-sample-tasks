@@ -19,7 +19,7 @@ cd ..
 # Build / Link For Truebit integration
 cp -rf ./test_data/*.data ./dist/
 cd ./dist
-node ~/emscripten-module-wrapper/prepare.js map_reduce.js --file input.data --file output.data --run --debug --memory-size=20 --metering=5000 --upload-ipfs --limit-stack
+node ~/emscripten-module-wrapper/prepare.js map_reduce.js --file input.data --file output.data --run --debug --memory-size=20 --metering=5000 --upload-ipfs --limit-stack --asmjs
 cp ./stacklimit.wasm ../task.wasm
 cp ./info.json ../
 cd ..
