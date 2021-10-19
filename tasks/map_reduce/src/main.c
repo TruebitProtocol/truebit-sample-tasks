@@ -33,11 +33,6 @@ MapReduceTuple read_input_file() {
 }
 
 void print_output(MapReduceTuple val) {
-    // printf("Array Size: %d\n", val->size);
-    // for (int i = 0; i < val->size; ++i) {
-    //     printf( "\tloc: %p - %.32s\n", (void*)val->data[i], val->data[i]);
-    // }
-
     FILE *fp;
     fp = fopen("output.data", "w");
     int i, j;
