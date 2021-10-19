@@ -11,12 +11,13 @@ cp -rf ./src/ ./build/
 # Build WASM Base File
 cd ./build
 emcc -O2 -I $EMSCRIPTEN/system/include -c main.c
-emcc -o map_reduce.js main.o -lcrypto -lssl -s WASM=2
+emcc -o map_reduce.js main.o -lcrypto -lssl -s WASM=1
 cp -rf *.js ../dist/
 cp -rf *.wasm ../dist/
 cd ..
 
 # Build / Link For Truebit integration
+cp -rf ./test_data/*.data ./dist/
 cd ./dist
 node ~/emscripten-module-wrapper/prepare.js map_reduce.js --file input.data --file output.data --run --debug --memory-size=20 --metering=5000 --upload-ipfs --limit-stack
 cp ./stacklimit.wasm ../task.wasm
