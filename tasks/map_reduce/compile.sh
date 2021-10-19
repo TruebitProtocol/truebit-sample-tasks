@@ -5,14 +5,15 @@ rm -rf *.js
 rm -rf ./build
 rm -rf ./dist
 rm -rf ./src/main.o
-mkdir ./build
 mkdir ./dist
-cp -rf ./src/* ./build
+cp -rf ./src/ ./build/
 
 # Build WASM Base File
 cd ./build
 emcc -O2 -I $EMSCRIPTEN/system/include -c main.c
-emcc -o ../dist/map_reduce.js main.o -lcrypto -lssl
+emcc -o map_reduce.js main.o -lcrypto -lssl -s WASM=2
+cp -rf *.js ../dist/
+cp -rf *.wasm ../dist/
 cd ..
 
 # Build / Link For Truebit integration
@@ -23,6 +24,5 @@ cp ./info.json ../
 cd ..
 
 # Build the Solidity Code
-cp -f ../../contracts ./build
-cp -f ./src/contract.sol ./build
+cp -rf ../../contracts ./build
 solc --overwrite --bin --abi --optimize ./build/contract.sol -o build
