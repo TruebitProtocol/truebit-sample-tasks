@@ -1,12 +1,28 @@
 #!/bin/sh
 
+rm -rf *.wasm
+rm -rf *.js
 rm -rf ./build
+rm -rf ./dist
+rm -rf ./src/main.o
 mkdir ./build
+mkdir ./dist
+cp -rf ./src/* ./build
 
-em++ -O2 -I $EMSCRIPTEN/system/include -c -std=c++11 ./src/main.c
-em++ -o map_reduce.js main.o -lcrypto -lssl
+# Build WASM Base File
+cd ./build
+emcc -O2 -I $EMSCRIPTEN/system/include -c main.c
+emcc -o ../dist/map_reduce.js main.o -lcrypto -lssl
+cd ..
 
-node ~/emscripten-module-wrapper/prepare.js map_reduce.js --file input.data --file output.data --run --debug --out=dist --memory-size=20 --metering=5000 --upload-ipfs --limit-stack
-cp dist/stacklimit.wasm task.wasm
-cp dist/info.json .
-solc --overwrite --bin --abi --optimize ./src/contract.sol -o build
+# Build / Link For Truebit integration
+cd ./dist
+node ~/emscripten-module-wrapper/prepare.js map_reduce.js --file input.data --file output.data --run --debug --memory-size=20 --metering=5000 --upload-ipfs --limit-stack
+cp ./stacklimit.wasm ../task.wasm
+cp ./info.json ../
+cd ..
+
+# Build the Solidity Code
+cp -f ../../contracts ./build
+cp -f ./src/contract.sol ./build
+solc --overwrite --bin --abi --optimize ./build/contract.sol -o build

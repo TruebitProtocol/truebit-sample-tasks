@@ -23,7 +23,7 @@ contract TruebitTaskPipeContract {
     uint8 internal memsize;
     uint internal blocklimit;
 
-    constructor(address tb, address tru_, address fs, bytes32 _codeFileID, uint _blocklimit) {
+    constructor(address tb, address tru_, address fs, bytes32 _codeFileID, uint _blocklimit) public {
         truebit = TrueBit(tb);
         tru = TRU(tru_);
         filesystem = Filesystem(fs);
