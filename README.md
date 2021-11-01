@@ -6,6 +6,9 @@ This is a Example Library of Several TrueBit Tasks that are written in different
 
 ## Pre-Reqs to Install
 
+These scripts are designed to be modified, built, and deployed within a running truebit-eth-server Docker image. It is assumed that you already have a properly
+configured Truebit installation, and can be connected to an appropriate blockchain for smart contract deployment.
+
 ### Install Emscripten
 
 * On A Mac:

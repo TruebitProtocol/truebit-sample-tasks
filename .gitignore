@@ -3,4 +3,7 @@
 *.DS_Store
 
 # Test Run Directories
-**/test_build/*
+**/build/*
+**/dist/*
+info.json
+task.wasm
