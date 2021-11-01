@@ -1,5 +1,5 @@
 #!/bin/sh
 
-cd tasks/map_reduce
-node ../deploy.js
+cd tasks/$1
+node ../../deploy.js
 cd ../..

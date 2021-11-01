@@ -31,7 +31,7 @@ async function addRandomIPFSFile(tbFileSystem, account, name, buf) {
 // Main function
 async function deploy() {
   // Upload .wasm codefile to IPFS
-  let codeBuf = fs.readFileSync("./dist/task.wasm");
+  let codeBuf = fs.readFileSync("./task.wasm");
   let ipfsFile = (
     await ipfs.files.add([{ content: codeBuf, path: "task.wasm" }])
   )[0];
@@ -44,7 +44,7 @@ async function deploy() {
   // Get artifacts for Truebit fileSystem and token contract
   let networkName = await getNetwork(web3);
   let artifacts = JSON.parse(
-    fs.readFileSync("../../../../wasm-client/" + networkName + ".json")
+    fs.readFileSync("/truebit-eth/wasm-client/" + networkName + ".json")
   );
   let tbFileSystem = new web3.eth.Contract(
     artifacts.fileSystem.abi,
@@ -53,7 +53,7 @@ async function deploy() {
   let tru = new web3.eth.Contract(artifacts.tru.abi, artifacts.tru.address);
 
   // Get precomputed initial machine state for sample task
-  let info = JSON.parse(fs.readFileSync("./dist/info.json"));
+  let info = JSON.parse(fs.readFileSync("./info.json"));
   let codeRoot = info.codehash;
 
   // Set account options for contract deploy
