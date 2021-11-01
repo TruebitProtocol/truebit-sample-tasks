@@ -9,17 +9,27 @@ This is a Example Library of Several TrueBit Tasks that are written in different
 These scripts are designed to be modified, built, and deployed within a running truebit-eth-server Docker image. It is assumed that you already have a properly
 configured Truebit installation, and can be connected to an appropriate blockchain for smart contract deployment.
 
-### Install Emscripten
+# Quick Start
 
-* On A Mac:
-    * Instructions Using [HomeBrew](https://formulae.brew.sh/formula/emscripten)
+  * git clone the sample repo into your truebit-docker/wasm_bin directory in native Linux
+  * run truebit-eth container with wasm_bin volume, up to and including bash /goerli.sh
 
-### Build Emscripten Module Wrapper
+```
+YYY=$HOME'/truebit-docker'
+docker run --network host -v $YYY/docker-clef:/root/.clef \
+	-v $YYY/docker-geth:/root/.ethereum \
+	-v $YYY/docker-ipfs:/root/.ipfs \
+	-v $YYY/wasm_bin:/root/wasm_bin \
+	--name truebit --rm -it truebitprotocol/truebit-eth:latest
+```
 
-* On A Mac:
-    * From `root` directory:
-        * RUN `cd ./emscripten-module-wrapper`
-        * RUN `npm install`
+  * open second terminal window into container: docker exec -it truebit /bin/bash
+  * cd ; cd wasm_bin/truebit-sample-tasks
+  * ./build_env.sh
+  * cd tasks/map_reduce
+  * sh compile.sh
+  * TBD deploy contract (this likely requires npm install somewhere, and running deploy.sh at top level)
+  * TBD call with send.js
 
 ## List of Example Tasks
 
