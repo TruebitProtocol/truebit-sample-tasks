@@ -23,17 +23,17 @@ docker run --network host -v $YYY/docker-clef:/root/.clef \
 	--name truebit --rm -it truebitprotocol/truebit-eth:latest
 ```
 
-  * open second terminal window into container: docker exec -it truebit /bin/bash
-  * cd ; cd wasm_bin/truebit-sample-tasks
-  * ./build_env.sh
-  * cd tasks/map_reduce
-  * sh compile.sh
-  * cd ~/wasm_bin/truebit-sample-tasks
-  * sh ./deploy.sh <task_name> <account_num>
+  * open second terminal window into container: ```docker exec -it truebit /bin/bash```
+  * TYPE: ```cd ; cd wasm_bin/truebit-sample-tasks```
+  * TYPE: ```./build_env.sh```
+  * TYPE: ```cd tasks/map_reduce```
+  * TYPE: ```sh compile.sh```
+  * TYPE: ```cd ~/wasm_bin/truebit-sample-tasks```
+  * TYPE: ```sh ./deploy.sh <task_name> <account_num>```
     * e.g.  ```sh ./deploy.sh map_reduce 2```
     * Sign the Account password in the running Truebit CLEF
   * cd tasks/map_reduce
-  * node ./send.js <account_num> <data_1> <data_2> ...<data_n>
+  * TYPE: ```node ./send.js <account_num> <data_1> <data_2> ...<data_n>```
     * e.g.  ```node ./send.js 2 27dc7AFF9355902358cD000000000021 17dc7AFF9355902358cD000000000401```
     * Sign the Account password in the running Truebit CLEF
 
