@@ -32,7 +32,7 @@ docker run --network host -v $YYY/docker-clef:/root/.clef \
   * TYPE: ```sh ./deploy.sh <task_name> <account_num>```
     * e.g.  ```sh ./deploy.sh map_reduce 2```
     * Sign the Account password in the running Truebit CLEF
-  * cd tasks/map_reduce
+  * TYPE: ```cd tasks/map_reduce```
   * TYPE: ```node ./send.js <account_num> <data_1> <data_2> ...<data_n>```
     * e.g.  ```node ./send.js 2 27dc7AFF9355902358cD000000000021 17dc7AFF9355902358cD000000000401```
     * Sign the Account password in the running Truebit CLEF
