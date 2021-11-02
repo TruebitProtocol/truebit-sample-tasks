@@ -12,7 +12,6 @@ configured Truebit installation, and can be connected to an appropriate blockcha
 # Quick Start
 
   * git clone the sample repo into your truebit-docker/wasm_bin directory in native Linux
-  * run truebit-eth container with wasm_bin volume, up to and including bash /goerli.sh
 
 ```
 YYY=$HOME'/truebit-docker'
@@ -22,9 +21,13 @@ docker run --network host -v $YYY/docker-clef:/root/.clef \
 	-v $YYY/wasm_bin:/root/wasm_bin \
 	--name truebit --rm -it truebitprotocol/truebit-eth:latest
 ```
-
+  * TYPE: ```cd /```
+  * TYPE: ```bash ./goerli.sh```
+    * Should run a split window with Geth on Top and CLEF on the bottom
+    * You need this window to enter in you password for the accounts when prompted
   * open second terminal window into container: ```docker exec -it truebit /bin/bash```
   * TYPE: ```cd ; cd wasm_bin/truebit-sample-tasks```
+  * TYPE: ```npm install```
   * TYPE: ```./build_env.sh```
   * TYPE: ```cd tasks/map_reduce```
   * TYPE: ```sh compile.sh```
