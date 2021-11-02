@@ -11,10 +11,10 @@ let account, fileSystem, mapReduceSubmitter;
 let timeout = async (ms) =>
   new Promise((resolve, reject) => setTimeout(resolve, ms));
 
-async function main() {
+async function main(account_num) {
   // Set account for Task Submitter
   let accounts = await web3.eth.getAccounts();
-  account = accounts[1];
+  account = accounts[account_num];
   let networkName = await getNetwork(web3);
 
   // Get Task Owner artifacts
@@ -27,13 +27,13 @@ async function main() {
     artifacts.mapReduce.abi,
     artifacts.mapReduce.address
   );
-  const len = process.argv?.length || 0;
+  const len = process.argv.length || 0;
   let str = "";
-  for (let i = 2; i < len; i++) {
+  for (let i = 3; i < len; i++) {
       const element = process.argv[i];
       str += element + '\n';
   }
-  console.log("Doing MapReduce on", str);
+  console.log("Doing MapReduce on:\n", str);
   let dta = new Buffer.from(str);
 
   // Deposit task fees
@@ -88,4 +88,5 @@ async function main() {
   console.log("Got solution", solution);
 }
 
-main();
+const args = process.argv.slice(2);
+main(parseInt(args[0], 10) || 0);

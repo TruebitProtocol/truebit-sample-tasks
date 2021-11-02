@@ -29,7 +29,7 @@ async function addRandomIPFSFile(tbFileSystem, account, name, buf) {
 }
 
 // Main function
-async function deploy() {
+async function deploy(accountNum) {
   // Upload .wasm codefile to IPFS
   let codeBuf = fs.readFileSync("./task.wasm");
   let ipfsFile = (
@@ -58,7 +58,7 @@ async function deploy() {
 
   // Set account options for contract deploy
   let accounts = await web3.eth.getAccounts();
-  let account = accounts[1];
+  let account = accounts[accountNum];
   let options = { from: account.toLowerCase(), gas: 4000000 };
 
   // upload random file, if applicable
@@ -107,8 +107,14 @@ async function deploy() {
     .deploy({ data: "0x" + bin, arguments: args })
     .send(options);
   artifacts["mapReduce"] = { address: c.options.address, abi: abi };
+  const fullPublicPath = process.cwd() + "/public";
+  fs.mkdir(fullPublicPath, { recursive: true }, (err) => {
+    if (err) throw err;
+  });
+  const networkFileName = "public/" + networkName + ".json"
+  console.log("Creating: " + process.cwd() + "/" + networkFileName);
   fs.writeFileSync(
-    "public/" + networkName + ".json",
+    networkFileName,
     JSON.stringify(artifacts)
   );
 
@@ -118,4 +124,5 @@ async function deploy() {
   console.log("Contract has been deployed at " + c.options.address);
 }
 
-deploy()
+const args = process.argv.slice(2);
+deploy(parseInt(args[0], 10) || 0);

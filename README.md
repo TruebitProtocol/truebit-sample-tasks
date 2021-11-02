@@ -28,8 +28,14 @@ docker run --network host -v $YYY/docker-clef:/root/.clef \
   * ./build_env.sh
   * cd tasks/map_reduce
   * sh compile.sh
-  * TBD deploy contract (this likely requires npm install somewhere, and running deploy.sh at top level)
-  * TBD call with send.js
+  * cd ~/wasm_bin/truebit-sample-tasks
+  * sh ./deploy.sh <task_name> <account_num>
+    * e.g.  ```sh ./deploy.sh map_reduce 2```
+    * Sign the Account password in the running Truebit CLEF
+  * cd tasks/map_reduce
+  * node ./send.js <account_num> <Binary32> <Binary32> ...
+    * e.g.  ```node ./send.js 2 27dc7AFF9355902358cD000000000021 17dc7AFF9355902358cD000000000401```
+    * Sign the Account password in the running Truebit CLEF
 
 ## List of Example Tasks
 
