@@ -6,12 +6,16 @@ This is a Example Library of Several TrueBit Tasks that are written in different
 
 ## Pre-Reqs to Install
 
-These scripts are designed to be modified, built, and deployed within a running truebit-eth-server Docker image. It is assumed that you already have a properly
-configured Truebit installation, and can be connected to an appropriate blockchain for smart contract deployment.
+These scripts are designed to be modified, built, and deployed within a running truebit-eth-server Docker image.
+
+**IMPORTANT!** You must have completed the "Quick Start" portion of the truebit-eth read me and have an operational, properly configured Truebit installation. This is required to be able to deploy and test Truebit tasks and associated smart contracts in this repository of samples.
+
+Your wallet must have enough ETH for contract deployment and any subsequent testing of the deployed contract. Also, appropriate TRU must be present to test task-giving.
 
 # Quick Start
+This will describe the process of cloning this repository into the proper location, running a truebit-eth (or truebit-eth-server) Docker container, using the toolchain within that container to compile a sample Truebit task, and compile and deploy the associated smart contracts where appropriate.
 
-  * git clone the sample repo into your truebit-docker/wasm_bin directory in native Linux
+  * git clone the sample repo into your ~/truebit-docker/wasm_bin directory in native Linux
 
 ```
 YYY=$HOME'/truebit-docker'
@@ -26,6 +30,16 @@ docker run --network host -v $YYY/docker-clef:/root/.clef \
     * Should run a split window with Geth on Top and CLEF on the bottom
     * You need this window to enter in you password for the accounts when prompted
   * open second terminal window into container: ```docker exec -it truebit /bin/bash```
+
+## Example Tasks
+
+### _MapReduce_ Example
+    * _Language:_ C
+    * _Description:_ Task that takes a list of Binary32 data that are made up of ETH Address (First 20B) and a Value (Last 12B) maps the Value to the n^th prime number, then reduces the list by only looking for Value that contains the number '3'
+    * This example illustrates a full, end-to-end pipeline with an on-chain smart contract giving a Truebit task to be run off-chain by the Truebit solver/verifier network, and results returned on-chain to the calling smart contract upon successful completion.
+
+To build this specific example, continue with the following instructions:
+
   * TYPE: ```cd ; cd wasm_bin/truebit-sample-tasks```
   * TYPE: ```npm install```
   * TYPE: ```./build_env.sh```
@@ -40,8 +54,3 @@ docker run --network host -v $YYY/docker-clef:/root/.clef \
     * e.g.  ```node ./send.js 2 27dc7AFF9355902358cD000000000021 17dc7AFF9355902358cD000000000401```
     * Sign the Account password in the running Truebit CLEF
 
-## List of Example Tasks
-
-* _MapReduce_ Example
-    * _Language:_ C
-    * _Description:_ Task that takes a list of Binary32 data that are made up of ETH Address (First 20B) and a Value (Last 12B) maps the Value to the n^th prime number, then reduces the list by only looking for Value that contains the number '3'

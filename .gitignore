@@ -6,5 +6,6 @@ package-lock.json
 # Test Run Directories
 **/build/*
 **/dist/*
+**/public/*
 info.json
 task.wasm
