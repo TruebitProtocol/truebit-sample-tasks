@@ -6,8 +6,7 @@ The practical case to keep in mind here is periodic ecosystem rewards, but I thi
 
 ## How To Use
 
-* Build the library from the root:
-    * RUN: `bash ./build`
+* Follow the build instructions in the top level ReadMe.md file
 
 ## Extra Notes
 
