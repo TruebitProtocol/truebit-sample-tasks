@@ -1,4 +1,4 @@
-# MapReduce Example for TrueBit
+# MapReduce Example for Truebit
 
 # Abstract
 We provide a template Truebit task for [MapReduce](https://en.wikipedia.org/wiki/MapReduce), a method for processing large data sets.
